@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       height: 100vh;
       margin: 0;
@@ -35,17 +35,22 @@
   </style>
 </head>
 <body>
-  <h1 style="text-align: center;">Leon's Snake Game</h1>
+  <h1>Leon's Snake Game</h1>
   <div id="gameContainer"></div>
+  <div id="score"></div>
   <script>
     const container = document.getElementById('gameContainer');
+    const scoreDisplay = document.getElementById('score');
     const grid = [];
     const rows = 20;
     const cols = 20;
     let snake = [{x: 9, y: 10}]; // Initial position of the snake
     let food = {x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows)}; // Initial position of the food
     let score = 0;
+    let highestScore = localStorage.getItem('highestScore') || 0;
     let direction;
+
+    scoreDisplay.textContent = `Score: ${score} | Highest Score: ${highestScore}`;
 
     // Create grid
     for (let i = 0; i < rows; i++) {
@@ -105,6 +110,10 @@
       // If snake eats the food
       if (snakeX === food.x && snakeY === food.y) {
         score++;
+        if (score > highestScore) {
+          highestScore = score;
+          localStorage.setItem('highestScore', highestScore);
+        }
         food = {x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows)};
       } else {
         snake.pop();
@@ -128,6 +137,7 @@
       }
 
       snake.unshift(newHead);
+      scoreDisplay.textContent = `Score: ${score} | Highest Score: ${highestScore}`;
     }
 
     // Function to check collision
